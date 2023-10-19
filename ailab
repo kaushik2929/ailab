@@ -1,0 +1,531 @@
+#CODE1(simple arithmetic operation)
+num1 = input('Enter first number: ')  
+num2 = input('Enter second number: ')
+sum = float(num1) + float(num2)  
+min = float(num1) - float(num2)  
+mul = float(num1) * float(num2)  
+div = float(num1) / float(num2) 
+print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))  
+print('The subtraction of {0} and {1} is {2}'.format(num1, num2, min))  
+print('The multiplication of {0} and {1} is {2}'.format(num1, num2, mul))  
+print('The division of {0} and {1} is {2}'.format(num1, num2, div))
+
+#code2(vaccum cleaner)
+import random
+def display(room):
+    print(room)
+room = [
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+]
+print("All the rooom are dirty")
+display(room)
+
+x =0
+y= 0
+while x < 4:
+    while y < 4:
+        room[x][y] = random.choice([0,1])
+        y+=1
+    x+=1
+    y=0
+
+print("Before cleaning the room I detect all of these random dirts")
+display(room)
+x =0
+y= 0
+z=0
+while x < 4:
+    while y < 4:
+        if room[x][y] == 1:
+            print("Vaccum in this location now,",x, y)
+            room[x][y] = 0
+            z+=1
+        y+=1
+    x+=1
+    y=0
+pro= (100-((z/16)*100))
+print("Room is clean now, Thanks for using")
+display(room)
+print('performance=',pro,'%')
+
+#code3 shortest distance
+class PQueue():
+  def __init__(self):
+    self.dict = {}
+    self.keys = []
+    self.sorted = False
+  def push(self, k, v):
+    self.dict[k] = v
+    self.sorted = False
+  def _sort(self):
+    self.keys = sorted(self.dict, key=self.dict.get,reverse=True)
+    self.sorted = True
+  def pop(self):
+    try:
+        if not self.sorted:
+            self._sort()
+        key = self.keys.pop()
+        value = self.dict[key]
+        self.dict.pop(key)
+        return key, value
+    except:
+        return None
+def path_costs(path):
+    c = {}
+    with open(path, 'r') as file:
+        for line in file:
+            line = line.split(", ")
+            v = int(line.pop())
+            e1 = line.pop()
+            e2 = line.pop()
+            print(" VALUE OF V, e1, e2", v, " ",e1, " ", e2 )
+            if e1 not in c:
+                c[e1] = {}
+            if e2 not in c:
+                c[e2] = {}
+            c[e1][e2] = c[e2][e1] = v
+
+    print(" C VALUE", c)
+    return c
+def a_star(start, goal, h, g):
+    frontier = PQueue()
+# pushing path and cost to pqueue
+    frontier.push(start, h[start])
+    while True:
+# poping path with least cost 
+        path, cost = frontier.pop()
+        print(path+ " " +str(cost))
+# splitting out end node in path
+        end = path.split("->")[-1]
+# removing heuristic value of end node from cost
+        cost -= h[end]
+        if goal == end:
+            break
+        for node, weight in g[end].items():
+# adding edge weight(cost) and node heuristic to total cost
+            new_cost = cost + weight + h[node]
+            new_path = path + "->" + node
+# adding new path and cost to pqueue
+            frontier.push(new_path, new_cost)
+
+a_star('Arad', 'Bucharest', heuristics('/home/Heuristics.txt'),
+path_costs('/home/Paths.txt'))
+
+#code4
+import math
+def minimax(tree, depth):
+  max_turn = bool(depth % 2)
+  for _ in range(depth):
+    zipped = zip(tree[::2], tree[1::2])
+    if max_turn:
+        tree = [max(a, b) for a, b in zipped] # max player
+    else:
+        tree = [min(a, b) for a, b in zipped] # min player
+    max_turn = not max_turn # swapping turns
+  return tree[0]
+A = [-1, 4, 2, 6, -3, -5, 0, 7]
+depth = math.ceil(math.log(len(A), 2))
+print(f"Result = {minimax(A, depth)}")
+
+#code5 alpha beta pruning 
+maximum, minimum=1000,-1000
+def fun_alphabeta(d,node,maxp,v,A,B):
+  if d==3:
+    return v[node]
+  if maxp:
+    best =minimum
+    for i in range(0,2):
+      value=fun_alphabeta(d+1,node*2+i,False,v,A,B)
+      best=max(best,value)
+      A=max(A,best)
+      if B<=A:
+        break
+    return best
+  else:
+    best=maximum
+    for i in range(0,2):
+      value=fun_alphabeta(d+1,node*2+i,True,v,A,B)
+      best=min(best,value)
+      A=min(A,best)
+      if B<=A:
+        break
+    return best
+scr=[]
+x= int(input("Enter total number of leaf node:"))
+for i in range(x):
+  y=int(input("Enter node value"))
+  scr.append(y)
+d=int(input("Enter depth value:"))
+node=int(input("Enter node value:"))
+print("The optimal value is:",fun_alphabeta(d,node,True,scr,minimum,maximum))
+
+#code6 queens
+# Taking number of queens as input from user
+print ("Enter the number of queens")
+N = int(input())
+# here we create a chessboard
+# NxN matrix with all elements set to 0
+board = [[0]*N for _ in range(N)]
+def attack(i, j):
+    #checking vertically and horizontally
+    for k in range(0,N):
+        if board[i][k]==1 or board[k][j]==1:
+            return True
+    #checking diagonally
+    for k in range(0,N):
+        for l in range(0,N):
+            if (k+l==i+j) or (k-l==i-j):
+                if board[k][l]==1:
+                    return True
+    return False
+def N_queens(n):
+    if n==0:
+        return True
+    for i in range(0,N):
+        for j in range(0,N):
+            if (not(attack(i,j))) and (board[i][j]!=1):
+                board[i][j] = 1
+                if N_queens(n-1)==True:
+                    return True
+                board[i][j] = 0
+    return False
+N_queens(N)
+for i in board:
+    print (i)
+
+#code7 tic tac toe
+
+import os
+turn = 'X'
+win = False
+spaces = 9
+def draw(board):
+    for i in range(6, -1, -3):
+        print(' ' + board[i] + '|' +
+              board[i+1] + '|' + board[i+2])
+def takeinput(board, spaces, turn):
+    pos = -1
+    print(turn + "'s turn:")
+    while pos == -1:
+        try:
+            print("Pick position 1-9:")
+            pos = int(input())
+            if(pos < 1 or pos > 9):
+                pos = -1
+            elif board[pos - 1] != ' ':
+                pos = -1
+        except:
+            print("enter a valid position")
+    spaces -= 1
+    board[pos - 1] = turn
+    if turn == 'X':
+        turn = 'O'
+    else:
+        turn = 'X'
+    return board, spaces, turn
+def checkwin(board):
+# could probably make this better
+    for i in range(0, 3):
+        r = i*3
+        if board[r] != ' ':
+            if board[r] == board[r+1] and board[r+1] == board[r+2]:
+                return board[r]
+# columns
+        if board[i] != ' ':
+            if board[i] == board[i+3] and board[i] == board[i+6]:
+                return board[i]
+# diagonals
+    if board[0] != ' ':
+        if (board[0] == board[4] and board[4] == board[8]):
+            return board[0]
+    if board[2] != ' ':
+        if (board[2] == board[4] and board[4] == board[6]):
+            return board[2]
+    return 0
+board = [' ']*9
+while not win and spaces:
+    draw(board)
+    board, spaces, turn = takeinput(board, spaces, turn)
+    win = checkwin(board)
+    os.system('cls')
+draw(board)
+if not win and not spaces:
+    print("draw")
+elif win:
+    print(f'{win} wins')
+    input()
+
+#code8 first order logic
+def get_index_comma(string):
+    """
+    Return index of commas in string
+    """
+
+    index_list = list()
+    # Count open parentheses
+    par_count = 0
+
+    for i in range(len(string)):
+        if string[i] == ',' and par_count == 0:
+            index_list.append(i)
+        elif string[i] == '(':
+            par_count += 1
+        elif string[i] == ')':
+            par_count -= 1
+
+    return index_list
+
+def is_variable(expr):
+    """
+    Check if expression is variable
+    """
+
+    for i in expr:
+        if i == '(':
+            return False
+
+    return True
+
+def process_expression(expr):
+        # Remove space in expression
+    expr = expr.replace(' ', '')
+
+    # Find the first index == '('
+    index = None
+    for i in range(len(expr)):
+        if expr[i] == '(':
+            index = i
+            break
+
+    # Return predicate symbol and remove predicate symbol in expression
+    predicate_symbol = expr[:index]
+    expr = expr.replace(predicate_symbol, '')
+
+    # Remove '(' in the first index and ')' in the last index
+    expr = expr[1:len(expr) - 1]
+
+    # List of arguments
+    arg_list = list()
+
+    # Split string with commas, return list of arguments
+    indices = get_index_comma(expr)
+
+    if len(indices) == 0:
+        arg_list.append(expr)
+    else:
+        arg_list.append(expr[:indices[0]])
+        for i, j in zip(indices, indices[1:]):
+            arg_list.append(expr[i + 1:j])
+        arg_list.append(expr[indices[len(indices) - 1] + 1:])
+
+    return predicate_symbol, arg_list
+
+def get_arg_list(expr):
+    
+    _, arg_list = process_expression(expr)
+
+    flag = True
+    while flag:
+        flag = False
+
+        for i in arg_list:
+            if not is_variable(i):
+                flag = True
+                _, tmp = process_expression(i)
+                for j in tmp:
+                    if j not in arg_list:
+                        arg_list.append(j)
+                arg_list.remove(i)
+
+    return arg_list
+
+def check_occurs(var, expr):
+    """
+    Check if var occurs in expr
+    """
+
+    arg_list = get_arg_list(expr)
+    if var in arg_list:
+        return True
+
+    return False
+
+def unify(expr1, expr2):
+   
+    # Step 1:
+    if is_variable(expr1) and is_variable(expr2):
+        if expr1 == expr2:
+            return 'Null'
+        else:
+            return False
+    elif is_variable(expr1) and not is_variable(expr2):
+        if check_occurs(expr1, expr2):
+            return False
+        else:
+            tmp = str(expr2) + '/' + str(expr1)
+            return tmp
+    elif not is_variable(expr1) and is_variable(expr2):
+        if check_occurs(expr2, expr1):
+            return False
+        else:
+            tmp = str(expr1) + '/' + str(expr2)
+            return tmp
+    else:
+        predicate_symbol_1, arg_list_1 = process_expression(expr1)
+        predicate_symbol_2, arg_list_2 = process_expression(expr2)
+
+        # Step 2
+        if predicate_symbol_1 != predicate_symbol_2:
+            return False
+        # Step 3
+        elif len(arg_list_1) != len(arg_list_2):
+            return False
+        else:
+            # Step 4: Create substitution list
+            sub_list = list()
+
+            # Step 5:
+            for i in range(len(arg_list_1)):
+                tmp = unify(arg_list_1[i], arg_list_2[i])
+
+                if not tmp:
+                    return False
+                elif tmp == 'Null':
+                    pass
+                else:
+                    if type(tmp) == list:
+                        for j in tmp:
+                            sub_list.append(j)
+                    else:
+                        sub_list.append(tmp)
+
+            # Step 6
+            return sub_list
+
+if __name__ == '__main__':
+    # Data 1
+    f1 = 'p(b(A), X, f(g(Z)))'
+    f2 = 'p(Z, f(Y), f(Y))'
+
+    # Data 2
+    # f1 = 'Q(a, g(x, a), f(y))'
+    # f2 = 'Q(a, g(f(b), a), x)'
+
+    # Data 3
+    # f1 = 'Q(a, g(x, a, d), f(y))'
+    # f2 = 'Q(a, g(f(b), a), x)'
+
+    result = unify(f1, f2)
+    if not result:
+        print('Unification failed!')
+    else:
+        print('Unification successfully!')
+        print(result)
+
+code#9 first order logic statements
+from __future__ import generators
+import re
+import agents
+from utils import *
+class KB:
+  def __init__(self, sentence=None):
+      abstract
+
+  def tell(self, sentence):
+        "Add the sentence to the KB"
+      abstract
+
+  def ask(self, query):
+      try:
+            return self.ask_generator(query).next()
+      except StopIteration:
+            return False
+  def ask_generator(self, query):
+        "Yield all the substitutions that make query true."
+      abstract
+
+  def retract(self, sentence):
+        "Remove the sentence from the KB"
+      abstract
+class PropKB(KB):
+    "A KB for Propositional Logic.  Inefficient, with no indexing."
+
+    def __init__(self, sentence=None):
+        self.clauses = []
+        if sentence:
+            self.tell(sentence)
+
+    def tell(self, sentence):
+        "Add the sentence's clauses to the KB"
+        self.clauses.extend(conjuncts(to_cnf(sentence)))
+
+    def ask_generator(self, query):
+        "Yield the empty substitution if KB implies query; else False"
+        if not tt_entails(Expr('&', *self.clauses), query):
+            return
+        yield {}
+
+    def retract(self, sentence):
+        "Remove the sentence's clauses from the KB"
+        for c in conjuncts(to_cnf(sentence)):
+            if c in self.clauses:
+                self.clauses.remove(c)
+
+class KB_Agent(agents.Agent):
+    """A generic logical knowledge-based agent. [Fig. 7.1]"""
+    def __init__(self, KB):
+        t = 0
+        def program(percept):
+            KB.tell(self.make_percept_sentence(percept, t))
+            action = KB.ask(self.make_action_query(t))
+            KB.tell(self.make_action_sentence(action, t))
+            t = t + 1
+            return action
+        self.program = program
+
+    def make_percept_sentence(self, percept, t):
+        return(Expr("Percept")(percept, t))
+
+    def make_action_query(self, t):
+        return(expr("ShouldDo(action, %d)" % t))
+
+    def make_action_sentence(self, action, t):
+        return(Expr("Did")(action, t))
+class Expr:
+   def __init__(self, op, *args):
+        "Op is a string or number; args are Exprs (or are coerced to Exprs)."
+        assert isinstance(op, str) or (isnumber(op) and not args)
+        self.op = num_or_str(op)
+        self.args = map(expr, args) ## Coerce args to Exprs
+
+    def __call__(self, *args):
+        """Self must be a symbol with no args, such as Expr('F').  Create a new
+        Expr with 'F' as op and the args as arguments."""
+        assert is_symbol(self.op) and not self.args
+        return Expr(self.op, *args)
+
+    def __repr__(self):
+        "Show something like 'P' or 'P(x, y)', or '~P' or '(P | Q | R)'"
+        if len(self.args) == 0: # Constant or proposition with arity 0
+            return str(self.op)
+        elif is_symbol(self.op): # Functional or Propositional operator
+            return '%s(%s)' % (self.op, ', '.join(map(repr, self.args)))
+        elif len(self.args) == 1: # Prefix operator
+            return self.op + repr(self.args[0])
+        else: # Infix operator
+            return '(%s)' % (' '+self.op+' ').join(map(repr, self.args))
+
+    def __eq__(self, other):
+        """x and y are equal iff their ops and args are equal."""
+        return (other is self) or (isinstance(other, Expr)
+            and self.op == other.op and self.args == other.args)
+
+    def __hash__(self):
+        "Need a hash method so Exprs can live in dicts."
+        return hash(self.op) ^ hash(tuple(self.args))
+
+
+
