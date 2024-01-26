@@ -1,0 +1,146 @@
+Program Number: 01
+
+import pandas as pd
+
+# Read the dataset
+phone_data = pd.read_csv("D:/NMIT/AEC R Programming/phone_data.csv")
+
+# Print the data
+print(phone_data)
+
+1)vodafone_users <- phone_data %>%
+
+                 filter (network == "Vodafone") %>%
+                 nrow()
+
+vodafone_users
+
+2)
+number_of_calls <- sum(phone_data$duration > 15)
+
+number_ of_ calls 
+
+3)
+top5_duration_calls <- phone_data %>%
+  filter(item == "call") %>%  # Filter for calls only
+  arrange(desc(duration)) %>%  # Arrange by call duration, descending
+  distinct(month, keep_all = TRUE) %>%  # Get distinct months, keeping all rows
+  head(5)  # Get the top 5 rows (i.e., months)
+
+# Print the top 5 months with their corresponding durations
+print(top5_duration_calls)
+
+4)
+avg_duration_by_network_type <- phone_data %>%
+  group_by(network_type) %>%
+  summarise(avg_duration = mean(duration))
+
+avg_duration_by_network_type
+
+5)
+avg_duration_by_item_network <- phone_data %>%
+  group_by(item, network) %>%
+  summarise(avg_duration = mean(duration))
+
+avg_duration_by_item_network
+6)
+count_by_item_network <- phone_data %>%
+  group_by(item, network) %>%
+  summarise(count = n())
+
+count_by_item_network
+
+7)
+month_with_max_calls <- phone_data %>%
+
+                 filter(item == "call") %>%
+                 group_by(month) %>%
+
+                 summarise(count = n()) %>%
+                 arrange(desc(count)) %>%
+
+                 head(1)
+month_with_max_calls
+8)
+total_messages_world_users <- phone_data%%
+                 filter(network == "world" & item == "sms") %>%
+                 nrow()
+
+total_messages_world_users
+
+9)
+proportion_meteor_users <- phone_data %>%
+                filter(network == "Meteor") %>%
+                nrow() / nrow(phone_data)
+proportion_meteor_users 
+
+10)
+month_with_highest_duration <- phone_data %>%
+
+                  group_by(month) %>%
+                  summarise(total_duration = sum(duration)) %>%
+
+                  arrange(desc(total_duration)) %>%
+                  head(1)
+
+month_with_highest_duration
+
+
+#program 2
+
+install.packages("ggpplot2")
+library(ggplot2)
+
+data(mpg)
+
+mpg
+
+1)
+hist(mpg$cty, main = "distribution of city MPG", xlab = "city mpg")
+
+2)
+barplot(table(mpg$class), main = "Count of each car type", xlab = "car type")
+
+3)
+plot(mpg$displ, mpg$hwy, main = "Displacement vs. highwayMPG", xlab = "displacement"
+
+4)
+boxplot(mpg$cyl, main = "Distribution of engine cylinder counts", ylab= "cylindercount"
+
+5)
+toyota_cars <- subset(mpg, manufacturer =="toyota")
+toyota_cars
+
+6)
+high_mileage_cars <- subset(mpg, cty >20 & hwy > 30)
+high_mileage_cars
+
+7)
+mpg$mileage_difference <- mpg$cty - mpg$hwy
+mpg$mileage_difference
+
+8)
+avg_city_mpg <- aggregate(cty ~ class, data = mpg, FUN= mean)
+avg_city_mpg_sorted <- avg_city_mpg[order(avg_city_mpg$cty, decreasing = TRUE),}
+avg_city_mpg_sorted
+
+9)
+meabian_displacement <- aggregate(displ ~ trans, data = mpg, FUN = median)
+meabian_displacement 
+
+10)
+plot(mpg$year, mpg$cty, main= "model year vs city mpg,", xlab = "model year", ylab= "citympg"
+
+11)
+outliers <- subset(mpg, hwy > 40)
+outliers
+
+
+
+
+3# program 
+
+
+
+
+
